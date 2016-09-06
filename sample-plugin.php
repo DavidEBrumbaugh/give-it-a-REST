@@ -14,7 +14,7 @@ require_once( 'wp-custom-ep-example.php' ); // Include the endpoint class
 $resource_object = new OptionAsResource( 'optiontest','v1' );
 $routes = array();
 $resource_object->add_route( '/valid_options', 'get' );
-			// The full url is: http://example.com/wp-json/optiontest/v1/
+			// The full url is: http://example.com/wp-json/optiontest/v1/valid_options
 $resource_object->add_route( '/(?P<option>[0-9a-z-_]+)', 'get' );
 			// The full url is: http://example.com/wp-json/optiontest/v1/{option}
 $resource_object->add_route( '/(?P<option>[0-9a-z-_]+)/(?P<id>[0-9a-z-_]+)', 'get' );
