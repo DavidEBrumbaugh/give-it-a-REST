@@ -1,4 +1,4 @@
-The wp-endpont-fw project is a lightweight php code library to make it easier to add WordPress rest API to themes and plugins.
+The give-it-a-REST project is a lightweight php code library to make it easier to add WordPress rest API to themes and plugins.
 
 It takes an Object Oriented approach.
 
