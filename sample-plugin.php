@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Sample For adding custom rest services end points to your Plugin
-Plugin URI: http://example.com/rest-service-plugin
+Plugin URI: https://github.com/DavidEBrumbaugh/give-it-a-REST
 Description: This plugin gives an example of the "Class to Resource Model"
 Version: 0.2
 Author: David Brumbaugh
