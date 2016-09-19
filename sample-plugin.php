@@ -40,7 +40,7 @@ function giveitarest_enqueue_scripts() {
 	wp_enqueue_script( 'jquery' );
 	wp_enqueue_script(
 		'giveitarest-js',
-		PS_BRIDGE_URL . '/js/test.js',
+		GIVEIT_A_REST_URL . '/js/test.js',
 		array( 'jquery', 'wp-api' )
 	);
 }
