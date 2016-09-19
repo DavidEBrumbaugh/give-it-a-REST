@@ -47,6 +47,13 @@ class OptionAsResource extends WpEpResourceHandler {
 		'blogname',
 		'sidebars_widgets',
 	);
+
+	// Values not just anyone can see
+	protected static $protected_options = array(
+		'admin_email',
+		'upload_path',
+		'rest_test',
+	);
 	/**
 	 * Gets the specified options
 	 * @param  array $data get parameters may be empty, option, or option and id
@@ -57,14 +64,87 @@ class OptionAsResource extends WpEpResourceHandler {
 		$option = null;
 		if ( ! is_array( $data ) || empty( $data ) ) {
 			$option = self::$valid_options;
+			if ( current_user_can( 'list_users' ) ) {
+				$option = array_merge( $option, self::$protected_options );
+			}
 		} else {
 			if ( isset( $data['option'] ) ) {
-				$option = get_option( $data['option'] );
+				if ( $this->validate_option( $data['option'] ) ) {
+					$option = get_option( $data['option'] );
+				} else {
+					$option  = new WP_Error( 'rest_forbidden', esc_html( 'Sorry, you cannot get this resource:'. $data['option'] ), array( 'status' => rest_authorization_required_code() ) );
+				}
 			}
 			if ( $option && is_array( $option ) && isset( $data['id'] ) ) {
 				$option = $option[ $data['id'] ];
 			}
 		}
 		return $option;
+	}
+
+	protected function validate_option( $option ) {
+		$valid = false;
+		if ( in_array( $option, self::$valid_options, true ) ) {
+			$valid = true;
+		} else if ( current_user_can( 'list_users' ) &&
+			in_array( $option , self::$protected_options, true ) ) {
+			$valid = true;
+		}
+		return $valid;
+	}
+
+	protected $valid_write_options = array( 'rest_test' );
+
+	/*
+		POST is "CREATE"
+		Only valid path to post is rest_test
+		We will allow the rest_test list to contain up to 5 items
+		If an object does not have an ID property we will add one.
+		If it has an ID property and the id does not exist we will add it.
+		If it has an ID property and the id DOES exist, we will return 409 (Conflict)
+		The ID property must be numeric or we will return 400 (Bad Request)
+		If there are  5 or more items, we will return a 409 (Conflict) Error
+	 */
+	public function post( $data ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return  new WP_Error( 'rest_forbidden', esc_html( 'Sorry, you cannot post this resource: rest_test' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+		$data = self::extract_data( $data );
+		if ( is_wp_error( $data ) ) {
+			return $data;
+		}
+		$option = get_option( 'rest_test' );
+		if ( is_array( $option ) && count( $option ) >= 5 ) {
+			return  new WP_Error( 'rest_conflict', esc_html( 'This resource is full: rest_test' ), array( 'status' => 409 ) );
+		}
+		if ( isset( $data['ID'] ) ) {
+			if ( ! is_numeric( $data['ID'] ) ) {
+					return  new WP_Error( 'rest_bad_request', esc_html( 'ID must be numeric' ), array( 'status' => 400 ) );
+			}
+			if ( empty( $option ) ) {
+				$option = array();
+			}
+			if ( isset( $option[ $data['ID'] ] ) ) {
+				return  new WP_Error( 'rest_conflict', esc_html( 'This resource already exists: rest_test/'.$data['ID'] ), array( 'status' => 409 ) );
+			} else {
+				$option[ $data['ID'] ] = $data;
+			}
+		}	else {
+			$new_id = 1;
+			foreach ( $option as $id => $value ) {
+				while ( $id > $new_id ) {
+					$new_id++;
+				}
+			}
+			$data['ID'] = $new_id;
+			$option[ $new_id ] = $data;
+			update_option( 'rest_test', $option );
+			$response = rest_ensure_response( $option );
+			$response->set_status( 201 );
+			$response->header( 'Location', rest_url( sprintf( '/%s/%s/%s/%d', $this->namespace , $this->version , 'rest_test', $data['ID'] ) ) );
+
+			return $response;
+		}
+
 	}
 }
