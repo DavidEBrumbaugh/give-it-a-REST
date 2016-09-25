@@ -23,6 +23,10 @@ $resource_object->add_route( '/(?P<option>[0-9a-z-_]+)/(?P<id>[0-9a-z-_]+)', 'ge
 $resource_object->add_route( '/rest_test', 'post' );
 				// The full url is: http://example.com/wp-json/optiontest/v1/rest_test
 
+$resource_object->add_route( '/rest_test/(?P<id>[0-9]+)', 'delete' );
+								// The full url is: http://example.com/wp-json/optiontest/v1/rest_test/{id}
+
+
 $resource_object->init_routes();
 
 /*
@@ -31,16 +35,27 @@ Please see: http://v2.wp-api.org/guide/authentication/ for details
 */
 
 define( 'GIVEIT_A_REST_URL',     plugin_dir_url( __FILE__ ) );
-// Assume we want to authenticate on both the front and back end
-add_action( 'admin_enqueue_scripts', 'giveitarest_enqueue_scripts' );
-add_action( 'wp_enqueue_scripts', 'giveitarest_enqueue_scripts' );
+define( 'GIVEIT_A_REST_PATH',    plugin_dir_path( __FILE__ ) );
 
 function giveitarest_enqueue_scripts() {
 	wp_enqueue_script( 'wp-api' );
 	wp_enqueue_script( 'jquery' );
 	wp_enqueue_script(
 		'giveitarest-js',
-		GIVEIT_A_REST_URL . '/js/test.js',
+		GIVEIT_A_REST_URL . 'js/test.js',
 		array( 'jquery', 'wp-api' )
 	);
 }
+// Assume we want to authenticate on both the front and back end
+add_action( 'admin_enqueue_scripts', 'giveitarest_enqueue_scripts' );
+add_action( 'wp_enqueue_scripts', 'giveitarest_enqueue_scripts' );
+
+function givitarest_test_page() {
+	include GIVEIT_A_REST_PATH . '/pages/resttest.php';
+}
+
+function givitarest_admin_page() {
+	add_options_page( 'Rest Test', 'Rest Test', 'manage_options', 'rest-test', 'givitarest_test_page' );
+}
+
+add_action( 'admin_menu','givitarest_admin_page' );

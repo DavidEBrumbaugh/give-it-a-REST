@@ -72,3 +72,35 @@ function test_create( data, target_div ) {
 				console.log( response );
 		 } );
 }
+
+function get_rest_test(target_div) {
+	jQuery.ajax( {
+			url: wpApiSettings.root + 'optiontest/v1/rest_test',
+			method: 'GET',
+			beforeSend: function ( xhr ) {
+					xhr.setRequestHeader( 'X-WP-Nonce', wpApiSettings.nonce );
+			}
+	} ).done( function ( response ) {
+			var display = '<pre>rest_test:\n' + JSON.stringify(response) + '</pre>';
+			jQuery(target_div).html(display);
+			console.log('rest_test');
+			console.log( response );
+	} );
+
+}
+
+function delete_rest_test(id,target_div) {
+	jQuery.ajax( {
+			url: wpApiSettings.root + 'optiontest/v1/rest_test/'+id,
+			method: 'DELETE',
+			beforeSend: function ( xhr ) {
+					xhr.setRequestHeader( 'X-WP-Nonce', wpApiSettings.nonce );
+			}
+	} ).done( function ( response ) {
+			var display = '<pre>rest_test:\n' + JSON.stringify(response) + '</pre>';
+			jQuery(target_div).html(display);
+			console.log('rest_test');
+			console.log( response );
+	} );
+
+}
