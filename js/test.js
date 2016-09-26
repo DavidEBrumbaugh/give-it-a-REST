@@ -61,7 +61,7 @@ function test_create( data, target_div ) {
 		 jQuery.ajax( {
 				url: wpApiSettings.root + 'optiontest/v1/rest_test',
 				method: 'POST',
-				data: data,
+				data: JSON.stringify(data),
 				beforeSend: function ( xhr ) {
 						xhr.setRequestHeader( 'X-WP-Nonce', wpApiSettings.nonce );
 				}
@@ -72,6 +72,24 @@ function test_create( data, target_div ) {
 				console.log( response );
 		 } );
 }
+
+function test_update( data, target_div ) {
+		// Create a rest_test object with "data"
+		 jQuery.ajax( {
+				url: wpApiSettings.root + 'optiontest/v1/rest_test/'+data.ID,
+				method: 'PUT',
+				data: JSON.stringify(data),
+				beforeSend: function ( xhr ) {
+						xhr.setRequestHeader( 'X-WP-Nonce', wpApiSettings.nonce );
+				}
+		 } ).done( function ( response ) {
+			  var display = '<pre>rest_test put:\n' + JSON.stringify(response) + '</pre>';
+				jQuery(target_div).html(display);
+				console.log('rest_test POST');
+				console.log( response );
+		 } );
+}
+
 
 function get_rest_test(target_div) {
 	jQuery.ajax( {

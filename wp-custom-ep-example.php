@@ -132,7 +132,7 @@ class OptionAsResource extends WpEpResourceHandler {
 		}	else {
 			$new_id = 1;
 			foreach ( $option as $id => $value ) {
-				while ( $id > $new_id ) {
+				while ( $id >= $new_id ) {
 					$new_id++;
 				}
 			}
@@ -140,7 +140,7 @@ class OptionAsResource extends WpEpResourceHandler {
 		$data['ID'] = $new_id;
 		$option[ $new_id ] = $data;
 		update_option( 'rest_test', $option );
-		$response = rest_ensure_response( $option );
+		$response = rest_ensure_response( $option[ $new_id ] );
 		$response->set_status( 201 );
 		$response->header( 'Location', rest_url( sprintf( '/%s/%s/%s/%d', $this->namespace , $this->version , 'rest_test', $data['ID'] ) ) );
 
@@ -178,4 +178,42 @@ class OptionAsResource extends WpEpResourceHandler {
 		}
 		return	new WP_Error( 'cantdelete', esc_html( 'Cannot Delete: rest_test/(invalid)' ), array( 'status' => 500 ) );
 	}
+
+	/**
+	 * Update a rest test object
+	 * @param  object $data Reqest Object
+	 * @return object       Response Object
+	 */
+	public function put( $data ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return	new WP_Error( 'rest_forbidden', esc_html( 'Sorry, you cannot put this resource: rest_test' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+		$params = $data->get_params();
+		$data = self::extract_data($data);
+		if ( is_wp_error( $data ) ) {
+			return $data;
+		}
+		$option = get_option( 'rest_test' );
+
+		if ( isset( $params['id'] ) ) {
+			if ( ! is_numeric( $params['id'] ) ) {
+				return	new WP_Error( 'rest_bad_request', esc_html( 'ID must be numeric' ), array( 'status' => 400 ) );
+			}
+			if ( empty( $option ) ) {
+					return	new WP_Error( 'rest_notfound', esc_html( 'Resource not found: rest_test/'.$data['ID'] ), array( 'status' => 404 ) );
+			}
+			if ( isset( $option[ $params['id'] ] ) ) {
+				if ($data['ID'] != $option[ $params['id'] ]['ID']) {
+					return	new WP_Error( 'cantput', esc_html( 'Cannot Update: rest_test/(invalid)' ), array( 'status' => 500 ) );
+				}
+				$option[ $params['id'] ] = $data;
+				update_option( 'rest_test', $option );
+				return new WP_REST_Response( true, 200 );
+			} else {
+				return	new WP_Error( 'rest_notfound', esc_html( 'Resource not found: rest_test/'.$data['ID'] ), array( 'status' => 404 ) );
+			}
+		}
+		return	new WP_Error( 'cantput', esc_html( 'Cannot Delete: rest_test/(invalid)' ), array( 'status' => 500 ) );
+	}
+
 }

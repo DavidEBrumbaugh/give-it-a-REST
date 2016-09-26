@@ -25,6 +25,8 @@ $resource_object->add_route( '/rest_test', 'post' );
 
 $resource_object->add_route( '/rest_test/(?P<id>[0-9]+)', 'delete' );
 								// The full url is: http://example.com/wp-json/optiontest/v1/rest_test/{id}
+$resource_object->add_route( '/rest_test/(?P<id>[0-9]+)', 'put' );
+																// The full url is: http://example.com/wp-json/optiontest/v1/rest_test/{id}
 
 
 $resource_object->init_routes();
