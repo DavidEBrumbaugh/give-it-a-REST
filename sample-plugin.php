@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Sample For adding custom rest services end points to your Plugin
+Plugin Name: Sample custom rest services end points
 Plugin URI: https://github.com/DavidEBrumbaugh/give-it-a-REST
 Description: This plugin gives an example of the "Class to Resource Model"
 Version: 0.2
@@ -27,7 +27,6 @@ $resource_object->add_route( '/rest_test/(?P<id>[0-9]+)', 'delete' );
 								// The full url is: http://example.com/wp-json/optiontest/v1/rest_test/{id}
 $resource_object->add_route( '/rest_test/(?P<id>[0-9]+)', 'put' );
 																// The full url is: http://example.com/wp-json/optiontest/v1/rest_test/{id}
-
 
 $resource_object->init_routes();
 

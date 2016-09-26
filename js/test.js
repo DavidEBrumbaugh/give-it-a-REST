@@ -20,7 +20,12 @@ function test_valid_options( target_div ) {
 			 jQuery(target_div).html(display);
 	     console.log('valid_options');
 	     console.log( response );
-	 } );
+	 } ).fail( function ( response ) {
+ 		 var display = '<pre>valid_options get failure:\n' + JSON.stringify(response) + '</pre>';
+ 		 jQuery(target_div).html(display);
+ 		 console.log('valid_options GET failure');
+ 		 console.log( response );
+ 	});
  }
 
 function test_blogname( target_div ) {
@@ -36,7 +41,12 @@ function test_blogname( target_div ) {
 			 jQuery(target_div).html(display);
 			 console.log('blogname');
 			 console.log( response );
-	 } );
+	 } ).fail( function ( response ) {
+ 		 var display = '<pre>blogname get failure:\n' + JSON.stringify(response) + '</pre>';
+ 		 jQuery(target_div).html(display);
+ 		 console.log('blogname GET failure');
+ 		 console.log( response );
+ 	});
  }
 
 function test_admin_email( target_div ) {
@@ -52,7 +62,12 @@ function test_admin_email( target_div ) {
 		jQuery(target_div).html(display);
  		 console.log('admin_email');
  		 console.log( response );
-  } );
+  } ).fail( function ( response ) {
+		 var display = '<pre>admin_email get failure:\n' + JSON.stringify(response) + '</pre>';
+		 jQuery(target_div).html(display);
+		 console.log('admin_email GET failure');
+		 console.log( response );
+	});
 
 }
 
@@ -70,7 +85,12 @@ function test_create( data, target_div ) {
 				jQuery(target_div).html(display);
 				console.log('rest_test POST');
 				console.log( response );
-		 } );
+		 } ).fail( function ( response ) {
+			  var display = '<pre>rest_test post failure:\n' + JSON.stringify(response) + '</pre>';
+				jQuery(target_div).html(display);
+				console.log('rest_test POST failure');
+				console.log( response );
+		 });
 }
 
 function test_update( data, target_div ) {
@@ -85,9 +105,14 @@ function test_update( data, target_div ) {
 		 } ).done( function ( response ) {
 			  var display = '<pre>rest_test put:\n' + JSON.stringify(response) + '</pre>';
 				jQuery(target_div).html(display);
-				console.log('rest_test POST');
+				console.log('rest_test PUT');
 				console.log( response );
-		 } );
+		 } ).fail( function ( response ) {
+			  var display = '<pre>rest_test put failure:\n' + JSON.stringify(response) + '</pre>';
+				jQuery(target_div).html(display);
+				console.log('rest_test PUT failure');
+				console.log( response );
+		 });
 }
 
 
@@ -103,7 +128,12 @@ function get_rest_test(target_div) {
 			jQuery(target_div).html(display);
 			console.log('rest_test');
 			console.log( response );
-	} );
+	} ).fail( function ( response ) {
+		 var display = '<pre>rest_test get failure:\n' + JSON.stringify(response) + '</pre>';
+		 jQuery(target_div).html(display);
+		 console.log('rest_test GET failure');
+		 console.log( response );
+	});
 
 }
 
@@ -119,6 +149,11 @@ function delete_rest_test(id,target_div) {
 			jQuery(target_div).html(display);
 			console.log('rest_test');
 			console.log( response );
-	} );
+	} ).fail( function ( response ) {
+		 var display = '<pre>rest_test delete failure:\n' + JSON.stringify(response) + '</pre>';
+		 jQuery(target_div).html(display);
+		 console.log('rest_test DELETE failure');
+		 console.log( response );
+	});
 
 }
