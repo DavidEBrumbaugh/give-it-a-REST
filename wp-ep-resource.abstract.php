@@ -3,7 +3,7 @@
  * Abstract class to derive actual resource from
  *
  * A complete URL identifies a "resource".  Each concrete subclass
- * of this abstract base class represents one "resourse" identified by
+ * of this abstract base class represents one "resource" identified by
  * a full route.
  *
  * A concrete subclass can get, post, put, delete or patch the resource in question
