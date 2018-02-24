@@ -13,7 +13,7 @@ The steps are:
 
 The class OptionAsResource shows how to implement get/post/put/and delete
 
-The file test.js shows how to use the RET API using jQuery ajax
+The file test.js shows how to use the REST API using jQuery ajax
 If you install the plugin you will see a new menu item in Settings - REST Test
 
 The Rest Test page allows you to test the REST calls from test.js
